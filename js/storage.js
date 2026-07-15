@@ -8,10 +8,10 @@
 const Storage = (() => {
     // In-memory cache for fast reads (populated from Firestore on login)
     let tradesCache = [];
-    let settingsCache = { maxRisk: 2500 };
+    let settingsCache = { maxRisk: 2600 };
     let isLoaded = false;
 
-    const DEFAULT_SETTINGS = { maxRisk: 2500 };
+    const DEFAULT_SETTINGS = { maxRisk: 2600 };
 
     // ===== FIRESTORE HELPERS =====
 
