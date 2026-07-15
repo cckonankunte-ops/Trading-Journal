@@ -1,0 +1,370 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sanjay Trading System v1.0</title>
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+    <!-- Login Screen -->
+    <div id="login-screen" class="login-screen">
+        <div class="glass-card login-card">
+            <h1>Sanjay Trading System</h1>
+            <p class="login-subtitle">Trading Psychology & Execution Journal</p>
+            <button id="btn-google-login" class="btn btn-google">
+                <svg width="18" height="18" viewBox="0 0 48 48"><path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z"/><path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z"/><path fill="#FBBC05" d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z"/><path fill="#34A853" d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.15 1.45-4.92 2.3-8.16 2.3-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z"/></svg>
+                Sign in with Google
+            </button>
+            <p class="login-info">Your data syncs across all devices via your Google account.</p>
+        </div>
+    </div>
+
+    <!-- Morning Message Modal -->
+    <div id="morning-modal" class="modal-overlay hidden">
+        <div class="modal glass-card morning-card">
+            <h2>Today's Mission</h2>
+            <ul class="mission-list">
+                <li>One Trade Only.</li>
+                <li>Respect Stop Loss.</li>
+                <li>Accept Losses.</li>
+                <li>Protect Capital.</li>
+                <li>The Market Will Open Tomorrow.</li>
+            </ul>
+            <button id="morning-dismiss" class="btn btn-primary">I Understand. Let's Begin.</button>
+        </div>
+    </div>
+
+    <!-- Settings Modal -->
+    <div id="settings-modal" class="modal-overlay hidden">
+        <div class="modal glass-card">
+            <h2>Settings</h2>
+            <label for="settings-max-risk">Max Risk Per Day (₹)</label>
+            <input type="number" id="settings-max-risk" min="100" step="100">
+            <div class="modal-actions">
+                <button id="settings-save" class="btn btn-primary">Save</button>
+                <button id="settings-cancel" class="btn btn-secondary">Cancel</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Navigation -->
+    <nav class="nav-bar glass-card hidden">
+        <div class="nav-brand">Sanjay Trading System <span class="version">v1.0</span></div>
+        <div class="nav-links">
+            <a href="#" data-view="dashboard" class="nav-link active">Dashboard</a>
+            <a href="#" data-view="calculator" class="nav-link">Calculator</a>
+            <a href="#" data-view="journal" class="nav-link">Journal</a>
+            <a href="#" data-view="analytics" class="nav-link">Analytics</a>
+            <a href="#" data-view="data" class="nav-link">Data</a>
+            <button id="nav-settings" class="btn btn-icon" title="Settings">⚙️</button>
+            <button id="nav-logout" class="btn btn-icon" title="Sign Out">🚪</button>
+        </div>
+    </nav>
+
+    <!-- Main Content Area -->
+    <main id="app-content" class="hidden">
+
+        <!-- DASHBOARD VIEW -->
+        <section id="view-dashboard" class="view">
+            <div class="dashboard-grid">
+                <div class="glass-card stat-card">
+                    <span class="stat-label">Today</span>
+                    <span id="dash-date" class="stat-value"></span>
+                </div>
+                <div class="glass-card stat-card">
+                    <span class="stat-label">Status</span>
+                    <span id="dash-status" class="stat-value status-ready">READY</span>
+                </div>
+                <div class="glass-card stat-card">
+                    <span class="stat-label">Max Risk</span>
+                    <span id="dash-max-risk" class="stat-value">₹2500</span>
+                </div>
+                <div class="glass-card stat-card">
+                    <span class="stat-label">Trades Today</span>
+                    <span id="dash-trades-today" class="stat-value">0/1</span>
+                </div>
+                <div class="glass-card stat-card">
+                    <span class="stat-label">Discipline Streak</span>
+                    <span id="dash-streak" class="stat-value">0 days</span>
+                </div>
+                <div class="glass-card stat-card">
+                    <span class="stat-label">Rule Adherence (30d)</span>
+                    <span id="dash-adherence" class="stat-value">—</span>
+                </div>
+                <div class="glass-card stat-card">
+                    <span class="stat-label">Win Rate</span>
+                    <span id="dash-winrate" class="stat-value">—</span>
+                </div>
+                <div class="glass-card stat-card chart-card">
+                    <span class="stat-label">Equity Curve</span>
+                    <canvas id="dash-equity-chart"></canvas>
+                </div>
+            </div>
+
+            <!-- Pre-Trade Checklist -->
+            <div id="checklist-section" class="glass-card checklist-card">
+                <h3>Pre-Trade Checklist</h3>
+                <div class="checklist-items">
+                    <label><input type="checkbox" class="checklist-item"> I will take only ONE trade today</label>
+                    <label><input type="checkbox" class="checklist-item"> Max risk today is ₹<span class="checklist-risk">2500</span></label>
+                    <label><input type="checkbox" class="checklist-item"> I accept today's loss if SL hits</label>
+                    <label><input type="checkbox" class="checklist-item"> I will never move my stop loss</label>
+                    <label><input type="checkbox" class="checklist-item"> I will close the platform after this trade</label>
+                </div>
+                <button id="btn-start-trade" class="btn btn-primary" disabled>Start Trade</button>
+            </div>
+
+            <!-- Trade Entry Form -->
+            <div id="trade-entry-section" class="glass-card trade-form-card hidden">
+                <h3>Trade Entry</h3>
+                <div id="rule-violation-banner" class="violation-banner hidden"></div>
+                <form id="trade-form">
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label for="trade-date">Date</label>
+                            <input type="date" id="trade-date" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="trade-time">Time</label>
+                            <input type="time" id="trade-time" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="trade-instrument">Instrument</label>
+                            <input type="text" id="trade-instrument" placeholder="e.g. NIFTY, BANKNIFTY" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="trade-strategy">Strategy</label>
+                            <input type="text" id="trade-strategy" placeholder="e.g. Breakout, Pullback" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="trade-direction">Direction</label>
+                            <select id="trade-direction" required>
+                                <option value="">Select</option>
+                                <option value="LONG">LONG</option>
+                                <option value="SHORT">SHORT</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="trade-entry">Entry Price</label>
+                            <input type="number" id="trade-entry" step="0.01" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="trade-sl">Stop Loss</label>
+                            <input type="number" id="trade-sl" step="0.01" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="trade-target">Target</label>
+                            <input type="number" id="trade-target" step="0.01" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="trade-exit">Exit Price</label>
+                            <input type="number" id="trade-exit" step="0.01" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="trade-quantity">Quantity</label>
+                            <input type="number" id="trade-quantity" min="1" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="trade-emotion-before">Emotion Before</label>
+                            <select id="trade-emotion-before" required>
+                                <option value="">Select</option>
+                                <option value="Calm">Calm</option>
+                                <option value="Excited">Excited</option>
+                                <option value="Anxious">Anxious</option>
+                                <option value="FOMO">FOMO</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="trade-emotion-after">Emotion After</label>
+                            <select id="trade-emotion-after" required>
+                                <option value="">Select</option>
+                                <option value="Calm">Calm</option>
+                                <option value="Excited">Excited</option>
+                                <option value="Anxious">Anxious</option>
+                                <option value="FOMO">FOMO</option>
+                            </select>
+                        </div>
+                        <div class="form-group full-width">
+                            <label for="trade-notes">Notes / Exit Reasoning</label>
+                            <textarea id="trade-notes" rows="3" placeholder="Why did you exit? Did you move SL?"></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label for="trade-rule-followed">Rule Followed</label>
+                            <select id="trade-rule-followed">
+                                <option value="Yes">Yes</option>
+                                <option value="No">No</option>
+                            </select>
+                        </div>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Save Trade</button>
+                </form>
+            </div>
+        </section>
+
+        <!-- CALCULATOR VIEW -->
+        <section id="view-calculator" class="view hidden">
+            <div class="glass-card calculator-card">
+                <h3>Position Size Calculator</h3>
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label for="calc-capital">Capital (₹)</label>
+                        <input type="number" id="calc-capital" value="100000" min="0">
+                    </div>
+                    <div class="form-group">
+                        <label for="calc-risk-type">Risk Type</label>
+                        <select id="calc-risk-type">
+                            <option value="fixed">Fixed ₹</option>
+                            <option value="percent">% of Capital</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="calc-risk-value">Risk Value</label>
+                        <input type="number" id="calc-risk-value" value="2500" min="0" step="0.01">
+                    </div>
+                    <div class="form-group">
+                        <label for="calc-lot-size">Lot Size</label>
+                        <input type="number" id="calc-lot-size" value="50" min="1">
+                    </div>
+                    <div class="form-group">
+                        <label for="calc-sl-points">SL Points</label>
+                        <input type="number" id="calc-sl-points" value="20" min="0.01" step="0.01">
+                    </div>
+                </div>
+                <div class="calc-results glass-card">
+                    <div class="result-item">
+                        <span class="result-label">Risk Amount</span>
+                        <span id="calc-risk-amount" class="result-value">₹2500</span>
+                    </div>
+                    <div class="result-item">
+                        <span class="result-label">Suggested Quantity</span>
+                        <span id="calc-quantity" class="result-value">—</span>
+                    </div>
+                    <div class="result-item">
+                        <span class="result-label">Suggested Lots</span>
+                        <span id="calc-lots" class="result-value">—</span>
+                    </div>
+                    <div class="result-item">
+                        <span class="result-label">1R Target</span>
+                        <span id="calc-1r" class="result-value">—</span>
+                    </div>
+                    <div class="result-item">
+                        <span class="result-label">2R Target</span>
+                        <span id="calc-2r" class="result-value">—</span>
+                    </div>
+                    <div class="result-item">
+                        <span class="result-label">3R Target</span>
+                        <span id="calc-3r" class="result-value">—</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- JOURNAL VIEW -->
+        <section id="view-journal" class="view hidden">
+            <div class="glass-card journal-card">
+                <h3>Trade Journal</h3>
+                <div class="journal-filters">
+                    <input type="text" id="journal-search" placeholder="Search instrument, strategy...">
+                    <select id="journal-filter-month">
+                        <option value="">All Months</option>
+                    </select>
+                    <select id="journal-filter-strategy">
+                        <option value="">All Strategies</option>
+                    </select>
+                    <select id="journal-filter-result">
+                        <option value="">All Results</option>
+                        <option value="win">Wins</option>
+                        <option value="loss">Losses</option>
+                    </select>
+                    <select id="journal-filter-emotion">
+                        <option value="">All Emotions</option>
+                        <option value="Calm">Calm</option>
+                        <option value="Excited">Excited</option>
+                        <option value="Anxious">Anxious</option>
+                        <option value="FOMO">FOMO</option>
+                    </select>
+                </div>
+                <div class="journal-table-wrapper">
+                    <table id="journal-table">
+                        <thead>
+                            <tr>
+                                <th data-sort="date">Date</th>
+                                <th data-sort="instrument">Instrument</th>
+                                <th data-sort="direction">Dir</th>
+                                <th data-sort="entry">Entry</th>
+                                <th data-sort="exit">Exit</th>
+                                <th data-sort="pnl">P&L</th>
+                                <th data-sort="strategy">Strategy</th>
+                                <th data-sort="emotionBefore">Emotion</th>
+                                <th data-sort="ruleFollowed">Rule</th>
+                            </tr>
+                        </thead>
+                        <tbody id="journal-tbody"></tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+        <!-- ANALYTICS VIEW -->
+        <section id="view-analytics" class="view hidden">
+            <div class="analytics-grid">
+                <div class="glass-card chart-container">
+                    <h3>Equity Curve</h3>
+                    <canvas id="chart-equity"></canvas>
+                </div>
+                <div class="glass-card chart-container">
+                    <h3>Monthly P&L</h3>
+                    <canvas id="chart-monthly-pnl"></canvas>
+                </div>
+                <div class="glass-card chart-container">
+                    <h3>Win Rate Over Time</h3>
+                    <canvas id="chart-winrate"></canvas>
+                </div>
+                <div class="glass-card chart-container">
+                    <h3>Rule Adherence % Over Time</h3>
+                    <canvas id="chart-adherence"></canvas>
+                </div>
+            </div>
+        </section>
+
+        <!-- DATA MANAGEMENT VIEW -->
+        <section id="view-data" class="view hidden">
+            <div class="glass-card data-card">
+                <h3>Data Management</h3>
+                <div class="data-actions">
+                    <button id="btn-export-json" class="btn btn-primary">Export Backup (JSON)</button>
+                    <button id="btn-export-csv" class="btn btn-primary">Export Journal (CSV)</button>
+                    <label class="btn btn-secondary file-label">
+                        Restore Backup (JSON)
+                        <input type="file" id="btn-import-json" accept=".json" hidden>
+                    </label>
+                </div>
+                <p class="data-info">All data is stored in Firebase cloud and syncs across your devices automatically.</p>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Firebase SDK (modular, compat build for simplicity with vanilla JS) -->
+    <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore-compat.js"></script>
+
+    <!-- Chart.js CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+
+    <!-- App Scripts -->
+    <script src="js/firebase-config.js"></script>
+    <script src="js/auth.js"></script>
+    <script src="js/storage.js"></script>
+    <script src="js/calculator.js"></script>
+    <script src="js/journal.js"></script>
+    <script src="js/dashboard.js"></script>
+    <script src="js/app.js"></script>
+
+    <!-- Stub files for future extensions -->
+    <script src="js/psychology.js"></script>
+    <script src="js/reports.js"></script>
+</body>
+</html>
