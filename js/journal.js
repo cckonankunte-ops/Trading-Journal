@@ -5,6 +5,17 @@
 const Journal = (() => {
     let currentSort = { field: 'date', direction: 'desc' };
 
+    /** Format positionType value to readable label */
+    function formatPositionType(type) {
+        const labels = {
+            'OPTION_BUY': 'Opt Buy',
+            'OPTION_SELL': 'Opt Sell',
+            'FUTURE_BUY': 'Fut Buy',
+            'FUTURE_SELL': 'Fut Sell'
+        };
+        return labels[type] || type || '';
+    }
+
     /** Render the journal view */
     function render() {
         populateFilters();
@@ -113,7 +124,7 @@ const Journal = (() => {
         const trades = getFilteredTrades();
 
         if (trades.length === 0) {
-            tbody.innerHTML = '<tr><td colspan="9" style="text-align:center;color:var(--text-muted);padding:2rem;">No trades found</td></tr>';
+            tbody.innerHTML = '<tr><td colspan="10" style="text-align:center;color:var(--text-muted);padding:2rem;">No trades found</td></tr>';
             return;
         }
 
@@ -128,11 +139,13 @@ const Journal = (() => {
             else if (ruleFollowed && !isWin) rowClass = 'row-loss-clean';
 
             const pnlColor = pnl >= 0 ? 'var(--green)' : 'var(--red)';
+            const posLabel = formatPositionType(t.positionType);
 
             return `<tr class="${rowClass}">
                 <td>${t.date}</td>
                 <td>${t.instrument || ''}</td>
                 <td>${t.direction || ''}</td>
+                <td>${posLabel}</td>
                 <td>${t.entry || ''}</td>
                 <td>${t.exit || ''}</td>
                 <td style="color:${pnlColor};font-weight:600;">₹${pnl.toFixed(2)}</td>

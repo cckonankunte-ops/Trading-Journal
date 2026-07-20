@@ -146,6 +146,16 @@
                             </select>
                         </div>
                         <div class="form-group">
+                            <label for="trade-position-type">Position Type</label>
+                            <select id="trade-position-type" required>
+                                <option value="">Select</option>
+                                <option value="OPTION_BUY">Option Buy</option>
+                                <option value="OPTION_SELL">Option Sell</option>
+                                <option value="FUTURE_BUY">Future Buy</option>
+                                <option value="FUTURE_SELL">Future Sell</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
                             <label for="trade-entry">Entry Price</label>
                             <input type="number" id="trade-entry" step="0.01" required>
                         </div>
@@ -292,6 +302,7 @@
                                 <th data-sort="date">Date</th>
                                 <th data-sort="instrument">Instrument</th>
                                 <th data-sort="direction">Dir</th>
+                                <th data-sort="positionType">Position</th>
                                 <th data-sort="entry">Entry</th>
                                 <th data-sort="exit">Exit</th>
                                 <th data-sort="pnl">P&L</th>

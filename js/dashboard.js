@@ -154,6 +154,7 @@ const Dashboard = (() => {
             instrument: document.getElementById('trade-instrument').value.trim().toUpperCase(),
             strategy: document.getElementById('trade-strategy').value.trim(),
             direction: document.getElementById('trade-direction').value,
+            positionType: document.getElementById('trade-position-type').value,
             entry: parseFloat(document.getElementById('trade-entry').value),
             sl: parseFloat(document.getElementById('trade-sl').value),
             target: parseFloat(document.getElementById('trade-target').value),

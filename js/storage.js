@@ -181,6 +181,17 @@ const Storage = (() => {
     /** Calculate P&L for a single trade */
     function calculatePnL(trade) {
         if (!trade.entry || !trade.exit || !trade.quantity) return 0;
+
+        // Use positionType for P&L calculation if available
+        if (trade.positionType) {
+            const isBuy = trade.positionType === 'OPTION_BUY' || trade.positionType === 'FUTURE_BUY';
+            const diff = isBuy
+                ? trade.exit - trade.entry
+                : trade.entry - trade.exit;
+            return diff * trade.quantity;
+        }
+
+        // Fallback for old trades without positionType
         const diff = trade.direction === 'LONG'
             ? trade.exit - trade.entry
             : trade.entry - trade.exit;
@@ -353,13 +364,14 @@ const Storage = (() => {
     function exportCSV() {
         if (tradesCache.length === 0) return '';
 
-        const headers = ['Date', 'Time', 'Instrument', 'Strategy', 'Direction', 'Entry', 'SL', 'Target', 'Exit', 'Quantity', 'P&L', 'Emotion Before', 'Emotion After', 'Rule Followed', 'Violations', 'Notes'];
+        const headers = ['Date', 'Time', 'Instrument', 'Strategy', 'Direction', 'Position Type', 'Entry', 'SL', 'Target', 'Exit', 'Quantity', 'P&L', 'Emotion Before', 'Emotion After', 'Rule Followed', 'Violations', 'Notes'];
         const rows = tradesCache.map(t => [
             t.date,
             t.time,
             t.instrument,
             t.strategy,
             t.direction,
+            t.positionType || '',
             t.entry,
             t.sl,
             t.target,
